@@ -24,7 +24,7 @@ import {
 	generateTokenPayload,
 	sendResponse,
 } from 'src/utils/commonMethods';
-import { CloudinaryService } from 'src/utils/cloudinary';
+import { CloudinaryService } from '../utils/cloudinary';
 
 @Injectable()
 export class UsersService {

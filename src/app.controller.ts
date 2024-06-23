@@ -4,7 +4,7 @@ import { Controller, Get, Version } from '@nestjs/common';
 export class AppController {
 	@Version('1')
 	@Get()
-	getHello(): { message: string } {
-		return { message: 'Welcome to Expense-API. This is the home page.' };
+	getHello() {
+		return 'Welcome to Expense-API. This is the home page.';
 	}
 }

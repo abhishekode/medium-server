@@ -18,7 +18,7 @@
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "jest --config ./test/jest-e2e.json",
-		"prepare": "husky install"
+		"prepare": "husky"
 	},
 	"dependencies": {
 		"@nestjs-modules/mailer": "^1.10.3",
@@ -48,6 +48,8 @@
 		"winston": "^3.13.0"
 	},
 	"devDependencies": {
+		"@commitlint/cli": "19.3.0",
+		"@commitlint/config-conventional": "^19.2.2",
 		"@nestjs/cli": "^10.0.0",
 		"@nestjs/schematics": "^10.0.0",
 		"@nestjs/testing": "^10.0.0",
@@ -76,23 +78,6 @@
 	"resolutions": {
 		"jackspeak": "2.3.6"
 	},
-	"jest": {
-		"moduleFileExtensions": [
-			"js",
-			"json",
-			"ts"
-		],
-		"rootDir": "src",
-		"testRegex": ".*\\.spec\\.ts$",
-		"transform": {
-			"^.+\\.(t|j)s$": "ts-jest"
-		},
-		"collectCoverageFrom": [
-			"**/*.(t|j)s"
-		],
-		"coverageDirectory": "../coverage",
-		"testEnvironment": "node"
-	},
 	"husky": {
 		"hooks": {
 			"pre-commit": "lint-staged"
@@ -101,7 +86,7 @@
 	"lint-staged": {
 		"*.{js,ts}": [
 			"prettier --write",
-			"eslint --fix"
+			"eslint --fix --max-warnings=120"
 		]
 	},
 	"prepare": "husky install"
