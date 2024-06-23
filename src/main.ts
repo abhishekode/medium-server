@@ -52,7 +52,7 @@ async function bootstrap() {
 	const config = new DocumentBuilder()
 		.setTitle('Expense API Documentation')
 		.setDescription(
-			`This API documentation outlines endpoints and functionality for managing expense-related data.
+			`This API documentation outlines endpoints and functionality for managing blog data.
 			Explore endpoints for retrieving, adding, and updating data efficiently.`
 		)
 		.addBearerAuth()
