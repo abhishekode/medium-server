@@ -20,28 +20,27 @@ export interface User extends Document {
 	_doc: unknown;
 }
 
-const userSchemaFields = {
-	name: { type: String, required: true },
-	phone: { type: Number, required: true, unique: true },
-	email: { type: String, required: true },
-	password: { type: String, required: true },
-	role: {
-		type: String,
-		enum: Object.values(UserRole),
-		default: UserRole.Student,
+export const UserSchema = new Schema<User>(
+	{
+		name: { type: String, required: true },
+		phone: { type: Number, required: true, unique: true },
+		email: { type: String, required: true },
+		password: { type: String, required: true },
+		role: {
+			type: String,
+			enum: Object.values(UserRole),
+			default: UserRole.Student,
+		},
+		isEmailVerified: { type: Boolean, default: false },
+		isAccountDeactivated: { type: Boolean, default: false },
+		otp: { type: Number },
+		otpExpireTime: { type: Date },
+		resetPasswordToken: { type: String },
+		description: { type: String, required: false },
+		gender: { type: String, required: false },
+		profileImg: { type: String, required: false },
 	},
-	isEmailVerified: { type: Boolean, default: false },
-	isAccountDeactivated: { type: Boolean, default: false },
-	otp: { type: Number },
-	otpExpireTime: { type: Date },
-	resetPasswordToken: { type: String },
-	description: { type: String, required: false },
-	gender: { type: String, required: false },
-	profileImg: { type: String, required: false },
-};
-
-const userSchemaOptions = {
-	timestamps: true,
-};
-
-export const UserSchema = new Schema<User>(userSchemaFields, userSchemaOptions);
+	{
+		timestamps: true,
+	}
+);

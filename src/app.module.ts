@@ -6,18 +6,21 @@ import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UsersModule } from './users/users.module';
 import { CategoryModule } from './category/category.module';
-import { FaqsModule } from './faqs/faqs.module';
 import { BlogsModule } from './blogs/blogs.module';
-import { CoursesModule } from './courses/courses.module';
-import { TestimonialsModule } from './testimonials/testimonials.module';
-import { ImageGalleryModule } from './image-gallery/image-gallery.module';
 import { BasicDetailsModule } from './basic-details/basic-details.module';
 import { RequestLoggerMiddleware } from './middleware/request-logger.middleware';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({ isGlobal: true }),
 		MongooseModule.forRoot(process.env.DATABASE_URL),
+		ThrottlerModule.forRoot([
+			{
+				ttl: 60000,
+				limit: 10,
+			},
+		]),
 		MailerModule.forRoot({
 			transport: {
 				host: process.env.EMAIL_HOST,
@@ -31,11 +34,7 @@ import { RequestLoggerMiddleware } from './middleware/request-logger.middleware'
 		}),
 		UsersModule,
 		CategoryModule,
-		FaqsModule,
 		BlogsModule,
-		CoursesModule,
-		TestimonialsModule,
-		ImageGalleryModule,
 		BasicDetailsModule,
 	],
 	controllers: [AppController],

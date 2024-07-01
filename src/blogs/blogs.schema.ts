@@ -15,17 +15,61 @@ export interface IBlogs extends Document {
 	claps: number;
 }
 
+// Define the schema for the Blogs collection.
 export const BlogSchema = new Schema<IBlogs>(
 	{
-		title: { type: String, required: true },
-		content: { type: String, required: true },
-		slug: { type: String, required: true },
-		isPublished: { type: Boolean, default: false },
-		author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-		category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
-		featuredImage: { type: String, required: true },
+		title: {
+			type: String,
+			required: true,
+			trim: true,
+			minlength: 3,
+			maxlength: 150,
+		},
+		content: {
+			type: String,
+			required: true,
+			minlength: 10,
+		},
+		slug: {
+			type: String,
+			required: true,
+			unique: true,
+			trim: true,
+			lowercase: true,
+		},
+		isPublished: {
+			type: Boolean,
+			default: false,
+		},
+		author: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: true,
+		},
+		category: {
+			type: Schema.Types.ObjectId,
+			ref: 'Category',
+			required: true,
+		},
+		featuredImage: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		tags: {
+			type: [String],
+			default: [],
+		},
+		claps: {
+			type: Number,
+			default: 0,
+			min: 0,
+		},
 	},
 	{
 		timestamps: true,
 	}
 );
+
+// Indexing for faster querying
+BlogSchema.index({ slug: 1 });
