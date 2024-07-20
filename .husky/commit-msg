@@ -1,12 +1,27 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Run commitlint with edit flag and show message
-npx --no -- commitlint --edit "${1}" || {
+# Read the commit message from the file
+COMMIT_MSG=$(cat "$1")
+
+npx commitlint --edit "$1" || {
+  echo
   echo >&2 "-----------------------------------------------------------------"
   echo >&2 "  ERROR: Your commit message does not meet the required format."
+  echo >&2 "  Commit message provided:"
+  echo >&2 "    $COMMIT_MSG"
   echo >&2 "  Please make sure your commit message follows the conventions."
-  echo >&2 "  For guidelines, refer to the project's CONTRIBUTING.md file."
+  echo >&2 "  Commit message should be in the format:"
+  echo >&2 "    <type>(<scope>): <subject>"
+  echo >&2 "  Example:"
+  echo >&2 "    feat(changes): type here message"
+  echo >&2 "    fix(changes): type here message"
+  echo >&2 "    docs(changes): type here message"
+  echo >&2 "    style(changes): type here message"
+  echo >&2 "    test(changes): type here message"
+  echo >&2 "    refactor(changes): type here message"
+  echo >&2 "    build(changes): type here message"
+  echo >&2 "    revert(changes): type here message"
   echo >&2 "-----------------------------------------------------------------"
   exit 1
 }
