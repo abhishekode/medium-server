@@ -2,7 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './middleware/http-exception.filter';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import {
+	BadRequestException,
+	ValidationPipe,
+	VersioningType,
+} from '@nestjs/common';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
@@ -13,15 +17,6 @@ async function bootstrap() {
 	// Create Winston logger with console and file transports
 	const logger = WinstonModule.createLogger({
 		transports: [
-			new winston.transports.Console({
-				format: winston.format.combine(
-					winston.format.colorize(),
-					winston.format.timestamp(),
-					winston.format.printf(({ timestamp, level, message }) => {
-						return `${timestamp} [${level}]: ${message}`;
-					})
-				),
-			}),
 			new winston.transports.File({
 				filename: 'app-error.log',
 				level: 'error',
@@ -33,17 +28,23 @@ async function bootstrap() {
 		],
 	});
 
-	const app = await NestFactory.create(AppModule, { logger });
+	const app = await NestFactory.create(AppModule);
 
 	// Use global filters for handling HTTP exceptions
 	app.useGlobalFilters(new HttpExceptionFilter());
 
-	// Use ValidationPipe globally with options
 	app.useGlobalPipes(
 		new ValidationPipe({
 			transform: true, // Automatically transform payloads to DTO classes
 			whitelist: true, // Strips out properties that are not in the DTO
 			forbidNonWhitelisted: true, // Throws an error if properties not in the DTO are provided
+			disableErrorMessages: false,
+			exceptionFactory: (errors) => {
+				const messages = errors.map((error) => {
+					return `${error.property} has wrong value ${error.value}, ${Object.values(error.constraints).join(', ')}`;
+				});
+				return new BadRequestException(messages[0]);
+			},
 		})
 	);
 
@@ -75,13 +76,7 @@ async function bootstrap() {
 	);
 
 	// Integrate Morgan with Winston for logging HTTP requests
-	app.use(
-		morgan('tiny', {
-			stream: {
-				write: (message) => logger.log('info', message.trim()),
-			},
-		})
-	);
+	app.use(morgan('tiny'));
 
 	// Enable Cross-Origin Resource Sharing with specific options
 	app.enableCors({

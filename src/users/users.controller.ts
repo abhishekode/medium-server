@@ -17,7 +17,7 @@ import {
 	LoginUserDto,
 	ResendOtpDto,
 	UpdateUserDto,
-	verifyEmailOtpDto,
+	VerifyEmailOtpDto,
 	CreateUserDto,
 } from './dto/create-user.dto';
 import { JoiValidationPipe } from 'src/middleware/validation.pipe';
@@ -86,7 +86,7 @@ export class UsersController {
 	@Post('verify-otp')
 	@ApiResponse({ status: 200, type: OtpSuccessVerifyResponse })
 	@UsePipes(new JoiValidationPipe(verifyOtpSchema))
-	async verifyEmailOtp(@Body() args: verifyEmailOtpDto) {
+	async verifyEmailOtp(@Body() args: VerifyEmailOtpDto) {
 		const { email, otp } = args;
 		return this.usersService.verifyEmailOtp(email, otp);
 	}
