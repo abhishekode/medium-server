@@ -7,7 +7,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { UsersModule } from './users/users.module';
 import { CategoryModule } from './category/category.module';
 import { BlogsModule } from './blogs/blogs.module';
-import { BasicDetailsModule } from './basic-details/basic-details.module';
 import { RequestLoggerMiddleware } from './middleware/request-logger.middleware';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { SchemasModule } from './schema/schema.module';
@@ -37,7 +36,6 @@ import { SchemasModule } from './schema/schema.module';
 		UsersModule,
 		CategoryModule,
 		BlogsModule,
-		BasicDetailsModule,
 	],
 	controllers: [AppController],
 	providers: [],
