@@ -80,7 +80,12 @@ async function bootstrap() {
 
 	// Enable Cross-Origin Resource Sharing with specific options
 	app.enableCors({
-		origin: ['http://localhost:4200', 'https://example.com'],
+		origin: [
+			'http://localhost:4200',
+			'https://example.com',
+			'http://localhost:5173',
+			'http://localhost:5174',
+		],
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 		credentials: true,
 	});
@@ -116,7 +121,7 @@ async function bootstrap() {
 		logger.log('Server is shutting down gracefully.');
 	});
 
-	logger.log(
+	console.log(
 		`Server is listening on http://localhost:${process.env.PORT || 3000} 🚀`
 	);
 }

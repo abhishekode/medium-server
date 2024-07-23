@@ -34,6 +34,7 @@ export class RolesGuard implements CanActivate {
 		}
 
 		const isUser = await this.userModel.findById(user.id);
+		console.log('isUser', isUser);
 
 		if (!isUser || isUser.isAccountDeactivated) {
 			// User not found or account is deactivated.

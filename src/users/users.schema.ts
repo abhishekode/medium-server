@@ -6,7 +6,7 @@ import { UserRole } from 'src/constants/common.interface';
 export interface User extends Document {
 	name: string;
 	email: string;
-	phone: number;
+	phone: string;
 	password: string;
 	role: UserRole;
 	isEmailVerified: boolean;
@@ -23,7 +23,7 @@ export interface User extends Document {
 export const UserSchema = new Schema<User>(
 	{
 		name: { type: String, required: true },
-		phone: { type: Number, required: true, unique: true },
+		phone: { type: String, required: true, unique: true },
 		email: { type: String, required: true },
 		password: { type: String, required: true },
 		role: {
