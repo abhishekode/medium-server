@@ -34,6 +34,8 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { convertStringToObjectId } from 'src/utils/commonMethods';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JoiValidationPipe } from 'src/middleware/validation.pipe';
+import { CreateBlogSchema, UpdateBlogSchema } from './dto/validate-blog.dto';
 
 @Controller('blogs')
 @ApiTags('Blogs')
@@ -57,7 +59,7 @@ export class BlogsController {
 	@ApiConsumes('multipart/form-data')
 	@UseInterceptors(FileInterceptor('featuredImage'))
 	create(
-		@Body() createBlogDto: CreateBlogDto,
+		@Body(new JoiValidationPipe(CreateBlogSchema)) createBlogDto: CreateBlogDto,
 		@UploadedFile() file: Express.Multer.File,
 		@Request() req
 	) {
@@ -84,7 +86,7 @@ export class BlogsController {
 	@UseInterceptors(FileInterceptor('featuredImage'))
 	update(
 		@Param('id') id: string,
-		@Body() updateBlogDto: UpdateBlogDto,
+		@Body(new JoiValidationPipe(UpdateBlogSchema)) updateBlogDto: UpdateBlogDto,
 		@Request() req,
 		@UploadedFile() file: Express.Multer.File
 	) {

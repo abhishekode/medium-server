@@ -10,6 +10,7 @@ import { BlogsModule } from './blogs/blogs.module';
 import { RequestLoggerMiddleware } from './middleware/request-logger.middleware';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { SchemasModule } from './schema/schema.module';
+import { ExpenseModule } from './expense/expense.module';
 
 @Module({
 	imports: [
@@ -36,6 +37,7 @@ import { SchemasModule } from './schema/schema.module';
 		UsersModule,
 		CategoryModule,
 		BlogsModule,
+		ExpenseModule,
 	],
 	controllers: [AppController],
 	providers: [],

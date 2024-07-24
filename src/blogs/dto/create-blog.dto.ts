@@ -8,6 +8,7 @@ import {
 	ArrayNotEmpty,
 	ArrayMinSize,
 	ArrayMaxSize,
+	ValidateIf,
 } from 'class-validator';
 
 export class CreateBlogDto {
@@ -44,15 +45,18 @@ export class CreateBlogDto {
 	featuredImage: Express.Multer.File;
 
 	@ApiProperty({
+		required: true,
 		description: 'Tags for the blog post',
 		example: ['MongoDB', 'Database', 'Backend'],
+	})
+	@ValidateIf((o) => {
+		return Array.isArray(o.tags);
 	})
 	@IsArray({ message: 'Tags must be an array' })
 	@ArrayNotEmpty({ message: 'Tags array must not be empty' })
 	@ArrayMinSize(1, { message: 'There must be at least one tag' })
 	@ArrayMaxSize(10, { message: 'There can be at most 10 tags' })
 	@IsString({ each: true, message: 'Each tag must be a string' })
-	@IsOptional()
 	tags: string[];
 }
 

@@ -25,8 +25,24 @@ export class BlogsService {
 		file: Express.Multer.File,
 		author: Types.ObjectId
 	) {
+		const checkBlogAlreadyExists = await this.blogModel.findOne({
+			title: createBlogDto.title,
+		});
+		if (checkBlogAlreadyExists) {
+			throw new NotFoundException(
+				'Blog title already exists,Please select another title'
+			);
+		}
+
 		const slug = slugify(createBlogDto.title, { lower: true });
 		let featuredImage = '';
+
+		const checkBlogSlugAlreadyExists = await this.blogModel.findOne({ slug });
+		if (checkBlogSlugAlreadyExists) {
+			throw new NotFoundException(
+				'Blog slug already exists, please select another title'
+			);
+		}
 
 		if (file?.originalname) {
 			const images = await this.cloudinaryService.uploadImage(file, 'blog');
