@@ -1,4 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
 	IsString,
 	IsNotEmpty,
@@ -9,6 +10,11 @@ import {
 	ArrayMinSize,
 	ArrayMaxSize,
 	ValidateIf,
+	IsBoolean,
+	IsNumber,
+	IsPositive,
+	Min,
+	Max,
 } from 'class-validator';
 
 export class CreateBlogDto {
@@ -58,26 +64,50 @@ export class CreateBlogDto {
 	@ArrayMaxSize(10, { message: 'There can be at most 10 tags' })
 	@IsString({ each: true, message: 'Each tag must be a string' })
 	tags: string[];
+
+	// add isPublished
+	@ApiProperty({ required: false })
+	@IsOptional()
+	@IsBoolean()
+	isPublished: boolean;
 }
 
 export class UpdateBlogDto extends PartialType(CreateBlogDto) {}
 
 export class BlogFilter {
-	@ApiProperty({ required: false })
+	@ApiProperty({ required: false, description: 'Filter by blog title' })
+	@IsOptional()
+	@IsString()
 	title?: string;
 
-	@ApiProperty({ required: false })
+	@ApiProperty({ required: false, description: 'Filter by author name' })
+	@IsOptional()
+	@IsString()
 	author?: string;
 
-	@ApiProperty({ required: false })
+	@ApiProperty({ required: false, description: 'Filter by blog category' })
+	@IsOptional()
+	@IsString()
 	category?: string;
 
-	@ApiProperty({ required: false })
+	@ApiProperty({ required: false, description: 'Filter by blog slug' })
+	@IsOptional()
+	@IsString()
 	slug?: string;
 
-	@ApiProperty({ required: false })
+	@ApiProperty({ required: false, description: 'Page number for pagination' })
+	@IsOptional()
+	@Type(() => Number)
+	@IsNumber()
+	@IsPositive()
 	page?: number;
 
-	@ApiProperty({ required: false })
+	@ApiProperty({ required: false, description: 'Page size for pagination' })
+	@IsOptional()
+	@Type(() => Number)
+	@IsNumber()
+	@IsPositive()
+	@Min(1)
+	@Max(100)
 	size?: number;
 }

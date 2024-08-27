@@ -140,6 +140,28 @@ export class BlogsService {
 		});
 		return data;
 	}
+	async markBlogAsPublished(
+		id: Types.ObjectId,
+		updateBlogDto: UpdateBlogDto,
+		author: Types.ObjectId
+	) {
+		const blog = await this.findBlogByQuery({ _id: id, author });
+
+		Object.assign(blog, updateBlogDto);
+
+		if (updateBlogDto.title) {
+			const slug = slugify(updateBlogDto.title, { lower: true });
+			blog.slug = slug;
+		}
+
+		await blog.save();
+
+		const data = sendResponse({
+			status: true,
+			message: 'blog update successfully',
+		});
+		return data;
+	}
 
 	async remove(id: Types.ObjectId, author: Types.ObjectId) {
 		await this.findBlogByQuery({ _id: id, author });

@@ -43,6 +43,8 @@ export const UpdateBlogSchema = Joi.object({
 		'string.base': 'Title must be a string',
 	}),
 
+	isPublished: Joi.boolean().optional(),
+
 	content: Joi.string().optional().messages({
 		'string.base': 'Content must be a string',
 	}),

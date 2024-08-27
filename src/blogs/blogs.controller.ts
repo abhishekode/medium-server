@@ -95,6 +95,20 @@ export class BlogsController {
 		return this.blogsService.update(blogId, updateBlogDto, author, file);
 	}
 
+	@Put(':id/published')
+	@ApiBearerAuth()
+	@Roles(UserRole.Admin)
+	@UseGuards(AuthGuard, RolesGuard)
+	publishedBlog(
+		@Param('id') id: string,
+		@Body(new JoiValidationPipe(UpdateBlogSchema)) updateBlogDto: UpdateBlogDto,
+		@Request() req
+	) {
+		const author = req.user.id;
+		const blogId = convertStringToObjectId(id);
+		return this.blogsService.markBlogAsPublished(blogId, updateBlogDto, author);
+	}
+
 	@Delete(':id')
 	@ApiBearerAuth()
 	@Roles(UserRole.Admin)
