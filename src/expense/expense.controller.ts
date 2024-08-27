@@ -13,7 +13,8 @@ import {
 import { ExpenseService } from './expense.service';
 import {
 	CreateExpenseDto,
-	ExpenseFilter,
+	CreateExpenseSchema,
+	ExpenseFilterDto,
 	UpdateExpenseDto,
 } from './dto/create-expense.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -25,6 +26,7 @@ import { UserRole } from 'src/constants/common.interface';
 import { Roles } from 'src/auth/roles.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { JoiValidationPipe } from 'src/middleware/validation.pipe';
 
 @Controller('expense')
 @ApiTags('expense')
@@ -45,7 +47,11 @@ export class ExpenseController {
 	@ApiBearerAuth()
 	@Roles(UserRole.Admin, UserRole.Student)
 	@UseGuards(AuthGuard, RolesGuard)
-	create(@Body() createExpenseDto: CreateExpenseDto, @Request() req) {
+	create(
+		@Body(new JoiValidationPipe(CreateExpenseSchema))
+		createExpenseDto: CreateExpenseDto,
+		@Request() req
+	) {
 		const userId = req.user.id;
 
 		return this.expenseService.create(createExpenseDto, userId);
@@ -55,10 +61,10 @@ export class ExpenseController {
 	@ApiBearerAuth()
 	@Roles(UserRole.Admin, UserRole.Student)
 	@UseGuards(AuthGuard, RolesGuard)
-	findAll(@Query() query: ExpenseFilter, @Request() req) {
+	findAll(@Query() query: ExpenseFilterDto, @Request() req) {
 		const userId = req.user.id;
 		const queryWithUser = { ...query, userId: userId };
-		return this.expenseService.findAll(queryWithUser);
+		return this.expenseService.findAll(queryWithUser, query.page, query.size);
 	}
 
 	@Get(':id')

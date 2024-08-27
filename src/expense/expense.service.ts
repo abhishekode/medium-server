@@ -9,7 +9,7 @@ import { Model, Types } from 'mongoose';
 import type { IExpense } from './expense.schema';
 import type {
 	CreateExpenseDto,
-	ExpenseFilter,
+	ExpenseFilterDto,
 	UpdateExpenseDto,
 } from './dto/create-expense.dto';
 import { getPaginationOptions, sendResponse } from 'src/utils/commonMethods';
@@ -38,7 +38,7 @@ export class ExpenseService {
 	}
 
 	async findAll(
-		query: ExpenseFilter,
+		query: ExpenseFilterDto,
 		page = 1,
 		size = 10
 	): Promise<IExpense[]> {
@@ -121,7 +121,7 @@ export class ExpenseService {
 		return data;
 	}
 
-	filterExpense(filter: ExpenseFilter): FilterQuery<IExpense> {
+	filterExpense(filter: ExpenseFilterDto): FilterQuery<IExpense> {
 		const query: FilterQuery<IExpense> = {};
 
 		const { title, category, minAmount, maxAmount, startDate, endDate, user } =
@@ -151,9 +151,8 @@ export class ExpenseService {
 			query.date = { ...query.date, $lte: endDate };
 		}
 
-		if (user) {
-			query.user =
-				user instanceof Types.ObjectId ? user : new Types.ObjectId(user);
+		if (user !== undefined) {
+			query.user = new Types.ObjectId(user);
 		}
 
 		return query;
